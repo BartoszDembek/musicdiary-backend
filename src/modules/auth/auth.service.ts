@@ -92,6 +92,20 @@ export class AuthService {
     }
   }
 
+  async resend(email:string){
+    try {
+      await this.supabase.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+          emailRedirectTo: 'https://example.com/welcome'
+        }
+      })
+    } catch (error) {
+      console.warn('Resend email validation warning:', error);
+    }
+  }
+
   async login(authDto: AuthDto) {
     try {
       // Sprawdzamy próby logowania przed wywołaniem Supabase

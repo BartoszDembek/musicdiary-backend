@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Headers, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Headers, UnauthorizedException, Query, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { IsEmail, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -61,6 +61,19 @@ export class AuthController {
     } catch (error) {
       console.error('[Auth Controller] Token refresh failed:', error);
       throw new UnauthorizedException('Invalid refresh token');
+    }
+  }
+
+  @Post('resend/:email')
+  async resend(@Param() email: string) {
+    console.log('Email validation resend:', email);
+    try {
+      return await this.authService.resend(email);
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      throw new UnauthorizedException('Invalid credentials');
     }
   }
 }
