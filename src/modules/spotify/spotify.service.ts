@@ -69,4 +69,22 @@ export class SpotifyService {
     }
   }
 
+  async getAlbumByID(id: string) {
+    const token = await this.getToken();
+    const url = `https://api.spotify.com/v1/albums/${id}`
+    const headers = await this.getAuthToken(token)
+    try {
+      const response = await axios.get(
+        url,
+        { headers }
+      )
+      return response.data
+    } catch(error){
+       if (axios.isAxiosError(error)) {
+        throw new Error(`Failed to get album by ID: ${error.response?.data || error.message}`);
+      }
+      throw new Error(`Failed to get album by ID: ${error.message}`);
+    }
+  }
+
 } 

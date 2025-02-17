@@ -11,4 +11,9 @@ export class SpotifyController {
     return await this.spotifyService.getNewReleases();
   }
 
+  @Get('album/:id')
+  async getAlbumByIDs(@Param('id') id: string) {
+    return await this.spotifyService.getAlbumByID(id);
+  }
+
 }
