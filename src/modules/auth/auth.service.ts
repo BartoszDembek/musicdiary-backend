@@ -29,17 +29,35 @@ export class AuthService {
 
   async signUp(username:string,email: string, password: string) {
     console.log(`[Auth Service] Próba rejestracji użytkownika: ${email}`);
-    const { data, error } = await this.supabase.auth.signUp({
-      email,
-      password,
-    });
-    
-    if (error) {
-      console.error(`[Auth Service] Błąd rejestracji:`, error);
-      throw error;
+    try {
+      // 1. Rejestracja użytkownika w auth
+      const { data: authData, error: authError } = await this.supabase.auth.signUp({
+        email: email,
+        password: password
+      })
+
+      if (authError) throw authError;
+
+      // 2. Dodanie dodatkowych danych do tabeli users
+      const { data: userRecord, error: userError } = await this.supabase
+      .from('users')
+      .insert([
+        {
+          id: authData.user?.id || '', // ID z auth.users
+          email: email,
+          username: username,
+          created_at: new Date(),
+          updated_at: new Date()
+        }
+      ])
+
+      if (userError) throw userError
+
+      return authData;
+    } catch (error) {
+      console.error('Błąd podczas rejestracji:', error.message)
+      return error;
     }
-    console.log(`[Auth Service] Pomyślnie zarejestrowano użytkownika: ${email}`);
-    return data;
   }
 
   
