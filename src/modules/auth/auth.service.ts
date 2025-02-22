@@ -41,15 +41,15 @@ export class AuthService {
       // 2. Dodanie dodatkowych danych do tabeli users
       const { data: userRecord, error: userError } = await this.supabase
       .from('users')
-      .insert([
+      .update(
         {
-          id: authData.user?.id || '', // ID z auth.users
-          email: email,
           username: username,
           created_at: new Date(),
           updated_at: new Date()
         }
-      ])
+      )
+      .eq('id', authData.user?.id) // warunek gdzie id jest równe id użytkownika
+      .select() 
 
       if (userError) throw userError
 
