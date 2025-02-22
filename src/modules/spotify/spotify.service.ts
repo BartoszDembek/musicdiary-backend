@@ -124,7 +124,7 @@ export class SpotifyService {
 
   async getArtistTopTracks(id: string) {
     const token = await this.getToken();
-    const url = `https://api.spotify.com/v1/artists/${id}/top-tracks?market=US`
+    const url = `https://api.spotify.com/v1/artists/${id}/top-tracks`
     const headers = await this.getAuthToken(token)
     try {
       const response = await axios.get(
@@ -137,24 +137,6 @@ export class SpotifyService {
         throw new Error(`Failed to get artist top tracks: ${error.response?.data || error.message}`);
       }
       throw new Error(`Failed to get artist top tracks: ${error.message}`);
-    }
-  }
-
-  async getRelatedArtists(id: string) {
-    const token = await this.getToken();
-    const url = `https://api.spotify.com/v1/artists/${id}/related-artists`
-    const headers = await this.getAuthToken(token)
-    try {
-      const response = await axios.get(
-        url,
-        { headers }
-      )
-      return response.data
-    } catch(error){
-      if (axios.isAxiosError(error)) {
-        throw new Error(`Failed to get related artists: ${error.response?.data || error.message}`);
-      }
-      throw new Error(`Failed to get related artists: ${error.message}`);
     }
   }
 } 
