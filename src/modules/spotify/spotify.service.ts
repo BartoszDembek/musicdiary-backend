@@ -1,7 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { encode } from 'punycode';
 
 @Injectable()
 export class SpotifyService {
@@ -87,4 +86,21 @@ export class SpotifyService {
     }
   }
 
+  async getArtistByID(id: string) {
+    const token = await this.getToken();
+    const url = `https://api.spotify.com/v1/artists/${id}`
+    const headers = await this.getAuthToken(token)
+    try {
+      const response = await axios.get(
+        url,
+        { headers }
+      )
+      return response.data
+    } catch(error){
+      if (axios.isAxiosError(error)) {
+        throw new Error(`Failed to get artist by ID: ${error.response?.data || error.message}`);
+      }
+      throw new Error(`Failed to get artist by ID: ${error.message}`);
+    }
+  }
 } 
