@@ -9,7 +9,6 @@ export class UserController {
   @Get(':id')
   async getUserProfile(@Param('id') id: string) {
     try {
-        await this.userService.debugCheckUser(id);
         const user = await this.userService.getUserProfile(id);
         if (!user) {
           throw new NotFoundException(`User with ID ${id} not found`);
