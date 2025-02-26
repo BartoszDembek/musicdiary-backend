@@ -157,4 +157,22 @@ export class SpotifyService {
       throw new Error(`Failed to get search results: ${error.message}`);
     }
   }
+
+  async getTrackByID(id: string) {
+    const token = await this.getToken();
+    const url = `https://api.spotify.com/v1/tracks/${id}`
+    const headers = await this.getAuthToken(token)
+    try {
+      const response = await axios.get(
+        url,
+        { headers }
+      )
+      return response.data
+    } catch(error){
+      if (axios.isAxiosError(error)) {
+        throw new Error(`Failed to get track by ID: ${error.response?.data || error.message}`);
+      }
+      throw new Error(`Failed to get track by ID: ${error.message}`);
+    }
+  }
 } 

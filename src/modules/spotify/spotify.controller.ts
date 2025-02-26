@@ -35,4 +35,9 @@ export class SpotifyController {
   async search(@Query('query') query: string) {
     return await this.spotifyService.search(query);
   }
+
+  @Get('track/:id')
+  async getTrackByID(@Param('id') id: string) {
+    return await this.spotifyService.getTrackByID(id);
+  }
 }
