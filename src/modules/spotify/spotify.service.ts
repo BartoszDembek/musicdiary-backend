@@ -139,4 +139,22 @@ export class SpotifyService {
       throw new Error(`Failed to get artist top tracks: ${error.message}`);
     }
   }
+
+  async search(query: string) {
+    const token = await this.getToken();
+    const url = `https://api.spotify.com/v1/search?q=${query}&type=album,artist,track`
+    const headers = await this.getAuthToken(token)
+    try {
+      const response = await axios.get(
+        url,
+        { headers }
+      )
+      return response.data
+    } catch(error){
+      if (axios.isAxiosError(error)) {
+        throw new Error(`Failed to get search results: ${error.response?.data || error.message}`);
+      }
+      throw new Error(`Failed to get search results: ${error.message}`);
+    }
+  }
 } 

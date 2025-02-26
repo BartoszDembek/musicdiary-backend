@@ -30,4 +30,9 @@ export class SpotifyController {
   async getArtistTopTracks(@Param('id') id: string) {
     return await this.spotifyService.getArtistTopTracks(id);
   }
+
+  @Get('search')
+  async search(@Query('query') query: string) {
+    return await this.spotifyService.search(query);
+  }
 }
