@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { SpotifyModule } from './modules/spotify/spotify.module';
 import { UserModule } from './modules/user/user.module';
+import { ReviewModule } from './modules/review/review.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { UserModule } from './modules/user/user.module';
     }),
     AuthModule,
     SpotifyModule,
-    UserModule
+    UserModule,
+    ReviewModule
   ],
   controllers: [AppController],
   providers: [AppService],
