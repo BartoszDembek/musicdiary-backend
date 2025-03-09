@@ -45,4 +45,24 @@ export class ReviewService {
       throw error;
     }
   }
+
+  async getReviewsBySpotifyId(spotify_id: string, type: string): Promise<any> {
+    try {
+      const { data: reviews, error } = await this.supabase
+        .from('reviews')
+        .select('*')
+        .eq('spotify_id', spotify_id)
+        .eq('types', type);
+
+      if (error) {
+        this.logger.error('Error fetching reviews:', error);
+        throw error;
+      }
+
+      return reviews;
+    } catch (error) {
+      this.logger.error('Error fetching reviews:', error);
+      throw error;
+    }
+  }
 }

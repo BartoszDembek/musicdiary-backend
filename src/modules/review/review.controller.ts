@@ -16,4 +16,18 @@ export class ReviewController {
         throw error;
       }
   }
+
+  @Get(':spotifyId')
+  async getReviewsBySpotifyId(
+    @Param('spotifyId') spotifyId: string,
+    @Query('type') type: string
+  ) {
+    try {
+      const response = await this.reviewService.getReviewsBySpotifyId(spotifyId, type);
+      return response;
+    } catch (error) {
+      console.error('Get reviews error:', error);
+      throw error;
+    }
+  }
 }
