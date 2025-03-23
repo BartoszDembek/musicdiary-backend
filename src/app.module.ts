@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SpotifyModule } from './modules/spotify/spotify.module';
 import { UserModule } from './modules/user/user.module';
 import { ReviewModule } from './modules/review/review.module';
+import { FollowsModule } from './modules/follows/follows.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ReviewModule } from './modules/review/review.module';
     AuthModule,
     SpotifyModule,
     UserModule,
-    ReviewModule
+    ReviewModule,
+    FollowsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
