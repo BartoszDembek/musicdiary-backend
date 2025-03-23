@@ -57,4 +57,40 @@ export class FollowsService {
       throw error;
     }
   }
+
+  async unfollowArtist(user_id: string, artist_id: string): Promise<any> {
+    try {
+      // Get the current follows record
+      const { data: existingFollow, error: fetchError } = await this.supabase
+        .from('follows')
+        .select('follow')
+        .eq('user_id', user_id)
+        .single();
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      if (!existingFollow || !existingFollow.follow) {
+        return { message: 'User is not following this artist' };
+      }
+
+      // Remove artist_id from the array
+      const updatedFollow = existingFollow.follow.filter(id => id !== artist_id);
+
+      // Update the record in database
+      const { data, error } = await this.supabase
+        .from('follows')
+        .update({ follow: updatedFollow })
+        .eq('user_id', user_id)
+        .select();
+
+      if (error) throw error;
+      return data;
+
+    } catch (error) {
+      this.logger.error('Error unfollowing artist:', error);
+      throw error;
+    }
+  }
 }
