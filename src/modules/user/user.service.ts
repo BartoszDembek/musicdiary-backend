@@ -70,7 +70,10 @@ export class UserService {
     try {
       const { data: user, error } = await this.supabase
         .from('users')
-        .select('*')
+        .select(`
+          *,
+          follows:follows(*)
+        `)
         .eq('id', id);
 
       if (error) {
