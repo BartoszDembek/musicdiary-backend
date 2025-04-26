@@ -72,7 +72,7 @@ export class UserService {
         .from('users')
         .select(`
           *,
-          follows(*)
+          follows!user_id(*)
         `)
         .eq('id', id);
 
