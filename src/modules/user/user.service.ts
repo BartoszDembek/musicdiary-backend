@@ -71,8 +71,7 @@ export class UserService {
       const { data: user, error } = await this.supabase
         .from('users')
         .select(`
-          *,
-          follows:follows(*)
+          *
         `)
         .eq('id', id);
 
