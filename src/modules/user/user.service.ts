@@ -72,7 +72,8 @@ export class UserService {
         .from('users')
         .select(`
           *,
-          follows:follows(*)
+          follows:follows(*),
+          reviews:reviews(*)
         `)
         .eq('id', id);
 
