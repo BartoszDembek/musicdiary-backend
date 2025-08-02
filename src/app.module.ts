@@ -7,6 +7,7 @@ import { SpotifyModule } from './modules/spotify/spotify.module';
 import { UserModule } from './modules/user/user.module';
 import { ReviewModule } from './modules/review/review.module';
 import { FollowsModule } from './modules/follows/follows.module';
+import { FavoritesModule } from './modules/favorites/favorites.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { FollowsModule } from './modules/follows/follows.module';
     UserModule,
     ReviewModule,
     FollowsModule,
+    FavoritesModule
   ],
   controllers: [AppController],
   providers: [AppService],
