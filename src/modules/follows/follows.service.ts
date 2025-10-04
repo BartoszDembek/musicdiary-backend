@@ -36,8 +36,16 @@ export class FollowsService {
       if (existingFollow) {
         // If record exists, add new artist_id to the array
         const currentFollow = existingFollow.follow || [];
-        if (!currentFollow.includes(artist_id)) {
-          updatedFollow = [...currentFollow, artist_id];
+        const isAlreadyFollowed = currentFollow.some(follow => 
+          typeof follow === 'object' ? follow.id === artist_id : follow === artist_id
+        );
+        
+        if (!isAlreadyFollowed) {
+          const followObject = {
+            id: artist_id,
+            createdAt: new Date().toISOString()
+          };
+          updatedFollow = [...currentFollow, followObject];
         } else {
           return { message: 'Artist already followed' };
         }
@@ -76,7 +84,11 @@ export class FollowsService {
       }
 
       // Remove artist_id from the array
-      const updatedFollow = existingFollow.follow.filter(id => id !== artist_id);
+      const updatedFollow = existingFollow.follow.filter(follow => {
+        // Handle both old format (string) and new format (object)
+        const followId = typeof follow === 'object' ? follow.id : follow;
+        return followId !== artist_id;
+      });
 
       // Update the record in database
       const { data, error } = await this.supabase

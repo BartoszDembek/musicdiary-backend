@@ -36,8 +36,16 @@ export class FavoritesService {
       if (existingFavorite) {
         // If record exists, add new id to the array
         const currentFavorite = existingFavorite.favorite || [];
-        if (!currentFavorite.includes(id)) {
-          updatedFavorite = [...currentFavorite, id];
+        const isAlreadyFavorited = currentFavorite.some(favorite => 
+          typeof favorite === 'object' ? favorite.id === id : favorite === id
+        );
+        
+        if (!isAlreadyFavorited) {
+          const favoriteObject = {
+            id: id,
+            createdAt: new Date().toISOString()
+          };
+          updatedFavorite = [...currentFavorite, favoriteObject];
         } else {
           return { message: 'Artist already favorited' };
         }
@@ -76,7 +84,11 @@ export class FavoritesService {
       }
 
       // Remove id from the array
-      const updatedFavorite = existingFavorite.favorite.filter(favoriteId => favoriteId !== id);
+      const updatedFavorite = existingFavorite.favorite.filter(favorite => {
+        // Handle both old format (string) and new format (object)
+        const favoriteId = typeof favorite === 'object' ? favorite.id : favorite;
+        return favoriteId !== id;
+      });
 
       // Update the record in database
       const { data, error } = await this.supabase
