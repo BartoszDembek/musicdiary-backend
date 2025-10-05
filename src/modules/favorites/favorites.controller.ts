@@ -7,9 +7,13 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Post('add/:userId')
-  async addFavorite(@Param('userId') userId: string, @Query('id') id: string) {
+  async addFavorite(
+    @Param('userId') userId: string, 
+    @Query('id') id: string,
+    @Body() body: { artistName: string; albumName: string }
+  ) {
     try {
-        const response = await this.favoritesService.addFavorite(userId, id);
+        const response = await this.favoritesService.addFavorite(userId, id, body.artistName, body.albumName);
         return response;
       } catch (error) {
         console.error('Get user error:', error);
