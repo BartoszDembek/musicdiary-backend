@@ -7,9 +7,13 @@ export class FollowsController {
   constructor(private readonly followsService: FollowsService) {}
 
   @Post('follow-artist/:id')
-  async getFollows(@Param('id') id: string, @Query('artistId') artist_id: string) {
+  async getFollows(
+    @Param('id') id: string, 
+    @Query('artistId') artist_id: string,
+    @Body() body: { artistName: string }
+  ) {
     try {
-        const response = await this.followsService.followArtist(id, artist_id);
+        const response = await this.followsService.followArtist(id, artist_id, body.artistName);
         return response;
       } catch (error) {
         console.error('Get user error:', error);

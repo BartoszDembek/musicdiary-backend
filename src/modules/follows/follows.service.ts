@@ -19,7 +19,7 @@ export class FollowsService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  async followArtist(user_id: string, artist_id: string): Promise<any> {
+  async followArtist(user_id: string, artist_id: string, artistName: string): Promise<any> {
     try {
       // First, get the current follows record
       const { data: existingFollow, error: fetchError } = await this.supabase
@@ -43,6 +43,7 @@ export class FollowsService {
         if (!isAlreadyFollowed) {
           const followObject = {
             id: artist_id,
+            artist_name: artistName,
             createdAt: new Date().toISOString()
           };
           updatedFollow = [...currentFollow, followObject];
