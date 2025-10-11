@@ -10,8 +10,8 @@ export class SpotifyService {
 
 
   constructor(private configService: ConfigService) {
-    this.clientId = this.configService.get<string>('CLIENT_ID') || '10b3d5e0f62844009e802c9932bf89ce';
-    this.clientSecret = this.configService.get<string>('CLIENT_SECRET') || '9a040a768ca146119d0563d9879dcffb';
+    this.clientId = this.configService.get<string>('CLIENT_ID') || '';
+    this.clientSecret = this.configService.get<string>('CLIENT_SECRET') || '';
   }
 
   async getToken() {

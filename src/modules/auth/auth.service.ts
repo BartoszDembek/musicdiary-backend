@@ -19,8 +19,8 @@ export class AuthService {
 
   constructor(private configService: ConfigService) {
     this.supabase = createClient(
-      configService.get('SUPABASE_URL') || 'https://xejncmdvbgkpcmypsnwh.supabase.co',
-      configService.get('SUPABASE_KEY') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhlam5jbWR2YmdrcGNteXBzbndoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzgwMTIxNzAsImV4cCI6MjA1MzU4ODE3MH0.zncqgGsHa1MWzmMDEUKbTPlaTX2MWtNNKqIZ1sGc7kY'
+      configService.get('SUPABASE_URL').toString(),
+      configService.get('SUPABASE_KEY').toString()
     );
     
     // Clean up old login attempts every hour

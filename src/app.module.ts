@@ -12,8 +12,7 @@ import { FavoritesModule } from './modules/favorites/favorites.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
+      isGlobal: true
     }),
     AuthModule,
     SpotifyModule,
