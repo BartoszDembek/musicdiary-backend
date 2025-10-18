@@ -53,6 +53,32 @@ export class AuthService {
 
       if (userError) throw userError
 
+      // 3. Utworzenie rekordu w tabeli favorites
+      const { error: favoritesError } = await this.supabase
+        .from('favorites')
+        .insert({
+          user_id: authData.user?.id,
+          created_at: new Date(),
+        });
+
+      if (favoritesError) {
+        console.error('Błąd podczas tworzenia rekordu favorites:', favoritesError);
+        // Nie rzucamy błędu, żeby nie przerwać rejestracji z powodu tego
+      }
+
+      // 4. Utworzenie rekordu w tabeli follows
+      const { error: followsError } = await this.supabase
+        .from('follows')
+        .insert({
+          user_id: authData.user?.id,
+          created_at: new Date(),
+        });
+
+      if (followsError) {
+        console.error('Błąd podczas tworzenia rekordu follows:', followsError);
+        // Nie rzucamy błędu, żeby nie przerwać rejestracji z powodu tego
+      }
+
       return authData;
     } catch (error) {
       console.error('Błąd podczas rejestracji:', error.message)
