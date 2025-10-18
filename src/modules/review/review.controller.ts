@@ -7,7 +7,13 @@ export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
   @Post(':id')
-  async postReview(@Param('id') id: string,@Body("spotifyId") spotifyId ,@Body("text") text: string, @Body("types") types, @Body("rating") rating: number, @Body("artist_name") artistName: string, @Body("item_name") itemName: string) {
+  async postReview(@Param('id') id: string,
+  @Body("spotifyId") spotifyId ,
+  @Body("text") text: string,
+  @Body("types") types,
+  @Body("rating") rating: number,
+  @Body("artistName") artistName: string,
+  @Body("itemName") itemName: string) {
     try {
         const response = await this.reviewService.postReview(id, spotifyId, text, types, rating, artistName, itemName);
         return response;
