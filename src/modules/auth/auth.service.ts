@@ -27,7 +27,7 @@ export class AuthService {
     setInterval(() => this.cleanupLoginAttempts(), 60 * 60 * 1000);
   }
 
-  async signUp(username:string,email: string, password: string) {
+  async signUp(username:string,email: string, password: string, avatar?:string) {
     console.log(`[Auth Service] Próba rejestracji użytkownika: ${email}`);
     try {
       // 1. Rejestracja użytkownika w auth
@@ -44,6 +44,7 @@ export class AuthService {
       .update(
         {
           username: username,
+          avatar: avatar || null,
           created_at: new Date(),
           updated_at: new Date()
         }

@@ -17,6 +17,9 @@ export class AuthDto {
   @IsString()
   @MinLength(6)
   password: string;
+
+  @IsString()
+  avatar?: string;
 }
 
 @Controller('auth')
@@ -25,7 +28,7 @@ export class AuthController {
 
   @Post('register')
   async signUp(@Body() authDto: AuthDto) {
-    return await this.authService.signUp(authDto.username,authDto.email, authDto.password);
+    return await this.authService.signUp(authDto.username,authDto.email, authDto.password, authDto.avatar);
   }
 
   @Post('login')
