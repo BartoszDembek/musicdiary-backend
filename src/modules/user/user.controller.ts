@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Headers, UnauthorizedException, Query, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Put, Headers, UnauthorizedException, Query, Param, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
 
 
@@ -18,5 +18,19 @@ export class UserController {
         console.error('Get user error:', error);
         throw error;
       }
+  }
+
+  @Put(':id')
+  async updateUserProfile(@Param('id') id: string, @Body() updateData: any) {
+    try {
+      const updatedUser = await this.userService.updateUserProfile(id, updateData);
+      if (!updatedUser) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      return updatedUser;
+    } catch (error) {
+      console.error('Update user error:', error);
+      throw error;
+    }
   }
 }

@@ -89,6 +89,24 @@ export class UserService {
       throw error;
     }
   }
+
+  async updateUserProfile(id: string, updateData: any): Promise<any> {
+    try {
+      const { data: updatedUser, error } = await this.supabase
+        .from('users')
+        .update(updateData)
+        .eq('id', id)
+        .select();
+      if (error) {
+        this.logger.error('Error updating user profile:', error);
+        throw error;
+      }
+      return updatedUser;
+    } catch (error) {
+      this.logger.error('Error updating user profile:', error);
+      throw error;
+    }
+  }
 }
 
 
