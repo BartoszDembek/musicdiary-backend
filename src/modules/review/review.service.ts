@@ -52,7 +52,10 @@ export class ReviewService {
     try {
       const { data: reviews, error } = await this.supabase
         .from('reviews')
-        .select('*')
+        .select(`
+          *,
+          review_comments:review_comments(*)
+        `)
         .eq('spotify_id', spotify_id)
         .eq('types', type);
 
@@ -64,6 +67,51 @@ export class ReviewService {
       return reviews;
     } catch (error) {
       this.logger.error('Error fetching reviews:', error);
+      throw error;
+    }
+  }
+
+  async addComment(reviewId: string, userId: string, text: string): Promise<any> {
+    try {
+      const { data: comment, error } = await this.supabase
+        .from('review_comments')
+        .insert({
+          review_id: reviewId,
+          user_id: userId,
+          text,
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) {
+        this.logger.error('Error adding comment:', error);
+        throw error;
+      }
+
+      return comment;
+    } catch (error) {
+      this.logger.error('Error adding comment:', error);
+      throw error;
+    }
+  }
+
+  async getComments(reviewId: string): Promise<any> {
+    try {
+      const { data: comments, error } = await this.supabase
+        .from('review_comments')
+        .select('*')
+        .eq('review_id', reviewId)
+        .order('created_at', { ascending: true });
+
+      if (error) {
+        this.logger.error('Error fetching comments:', error);
+        throw error;
+      }
+
+      return comments;
+    } catch (error) {
+      this.logger.error('Error fetching comments:', error);
       throw error;
     }
   }

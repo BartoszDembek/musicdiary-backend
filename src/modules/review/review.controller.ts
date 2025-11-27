@@ -6,6 +6,30 @@ import { ReviewService } from './review.service';
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
+  @Post('comment')
+  async addComment(
+    @Body('reviewId') reviewId: string,
+    @Body('userId') userId: string,
+    @Body('text') text: string,
+  ) {
+    try {
+      return await this.reviewService.addComment(reviewId, userId, text);
+    } catch (error) {
+      console.error('Add comment error:', error);
+      throw error;
+    }
+  }
+
+  @Get('comments/:reviewId')
+  async getComments(@Param('reviewId') reviewId: string) {
+    try {
+      return await this.reviewService.getComments(reviewId);
+    } catch (error) {
+      console.error('Get comments error:', error);
+      throw error;
+    }
+  }
+
   @Post(':id')
   async postReview(@Param('id') id: string,
   @Body("spotifyId") spotifyId ,
