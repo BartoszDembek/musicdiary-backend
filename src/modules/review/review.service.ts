@@ -54,6 +54,7 @@ export class ReviewService {
         .from('reviews')
         .select(`
           *,
+          users:users(*),
           review_comments:review_comments(*)
         `)
         .eq('spotify_id', spotify_id)
