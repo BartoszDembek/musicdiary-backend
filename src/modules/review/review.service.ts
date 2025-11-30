@@ -55,7 +55,10 @@ export class ReviewService {
         .select(`
           *,
           users:users(*),
-          review_comments:review_comments(*)
+          review_comments:review_comments(
+            *,
+            users:users(*)
+          )
         `)
         .eq('spotify_id', spotify_id)
         .eq('types', type);
@@ -101,7 +104,7 @@ export class ReviewService {
     try {
       const { data: comments, error } = await this.supabase
         .from('review_comments')
-        .select('*')
+        .select(`*, users:users(*)`)
         .eq('review_id', reviewId)
         .order('created_at', { ascending: true });
 
