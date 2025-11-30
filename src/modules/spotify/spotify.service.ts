@@ -52,7 +52,8 @@ export class SpotifyService {
 
   async getNewReleases() {
     const token = await this.getToken();
-    const url = "https://api.spotify.com/v1/browse/new-releases"
+    const offset = Math.floor(Math.random() * 5)
+    const url = `https://api.spotify.com/v1/browse/new-releases?offset=${offset}`
     const headers = await this.getAuthToken(token)
     try {
       const response = await axios.get(
