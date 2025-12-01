@@ -74,7 +74,8 @@ export class UserService {
           *,
           follows:follows(*),
           reviews:reviews(*),
-          favorites:favorites(*)
+          favorites:favorites(*),
+          review_comments:review_comments(*)
         `)
         .eq('id', id);
 
