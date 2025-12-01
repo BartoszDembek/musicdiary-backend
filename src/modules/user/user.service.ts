@@ -99,7 +99,7 @@ export class UserService {
       const { data: followersData, error: followersError } = await this.supabase
         .from('follows')
         .select('*')
-        .contains('follows', [{ id }]);
+        .contains('follow', [{ id }]);
 
       if (followersError) {
         this.logger.error('Error fetching followers:', followersError);
