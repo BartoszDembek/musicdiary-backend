@@ -73,6 +73,7 @@ export class UserService {
         .from('users')
         .select(`
           *,
+          follows:follows(*),
           reviews:reviews(*),
           favorites:favorites(*),
           review_comments:review_comments(*)
@@ -83,16 +84,6 @@ export class UserService {
       if (error) {
         this.logger.error('Error fetching user:', error);
         throw error;
-      }
-
-      // Pobierz rekordy follows gdzie user_id = id (użytkownicy których obserwuje)
-      const { data: followsData, error: followsError } = await this.supabase
-        .from('follows')
-        .select('*')
-        .eq('user_id', id);
-
-      if (followsError) {
-        this.logger.error('Error fetching follows:', followsError);
       }
 
       // Pobierz wszystkie rekordy z tabeli follows
@@ -118,7 +109,6 @@ export class UserService {
 
       return {
         ...user,
-        follows: followsData || [],
         followers: followersData || [],
       };
     } catch (error) {
