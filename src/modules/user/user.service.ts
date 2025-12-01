@@ -86,27 +86,6 @@ export class UserService {
         throw error;
       }
 
-      // Pobierz wszystkie rekordy z tabeli follows
-      const { data: allFollows, error: allFollowsError } = await this.supabase
-        .from('follows')
-        .select('*');
-
-      if (allFollowsError) {
-        this.logger.error('Error fetching all follows:', allFollowsError);
-      }
-
-      // Filtruj rekordy gdzie w kolumnie follows (JSON array) występuje obiekt z danym id
-      const followersData = allFollows?.filter((record) => {
-        if (Array.isArray(record.follow)) {
-          return record.follow.some((follow: any) => follow.id === id);
-        }
-        return false;
-      }) || [];
-
-
-      this.logger.debug(`User ${id} follows:`, allFollows);
-      this.logger.debug(`User ${id} followers:`, followersData);
-
       return user;
     } catch (error) {
       this.logger.error('Error fetching user:', error);
