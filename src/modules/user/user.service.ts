@@ -68,23 +68,48 @@ export class UserService {
 
   async getUserProfile(id: string): Promise<any> {
     try {
+      // Pobierz profil użytkownika z powiązanymi danymi
       const { data: user, error } = await this.supabase
         .from('users')
         .select(`
           *,
-          follows:follows(*),
           reviews:reviews(*),
           favorites:favorites(*),
           review_comments:review_comments(*)
         `)
-        .eq('id', id);
+        .eq('id', id)
+        .single();
 
       if (error) {
         this.logger.error('Error fetching user:', error);
         throw error;
       }
 
-      return user;
+      // Pobierz rekordy follows gdzie user_id = id (użytkownicy których obserwuje)
+      const { data: followsData, error: followsError } = await this.supabase
+        .from('follows')
+        .select('*')
+        .eq('user_id', id);
+
+      if (followsError) {
+        this.logger.error('Error fetching follows:', followsError);
+      }
+
+      // Pobierz rekordy follows gdzie w kolumnie follows (JSON array) występuje obiekt z danym id (obserwujący)
+      const { data: followersData, error: followersError } = await this.supabase
+        .from('follows')
+        .select('*')
+        .contains('follows', [{ id }]);
+
+      if (followersError) {
+        this.logger.error('Error fetching followers:', followersError);
+      }
+
+      return {
+        ...user,
+        follows: followsData || [],
+        followers: followersData || [],
+      };
     } catch (error) {
       this.logger.error('Error fetching user:', error);
       throw error;
