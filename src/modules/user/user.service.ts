@@ -107,10 +107,7 @@ export class UserService {
       this.logger.debug(`User ${id} follows:`, allFollows);
       this.logger.debug(`User ${id} followers:`, followersData);
 
-      return {
-        ...user,
-        followers: followersData || [],
-      };
+      return user;
     } catch (error) {
       this.logger.error('Error fetching user:', error);
       throw error;
