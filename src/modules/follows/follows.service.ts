@@ -106,4 +106,92 @@ export class FollowsService {
       throw error;
     }
   }
+
+  async followUser(user_id: string, targetUserId: string, targetUserName: string): Promise<any> {
+    try {
+      // First, get the current follows record
+      const { data: existingFollow, error: fetchError } = await this.supabase
+        .from('follows')
+        .select('follow')
+        .eq('user_id', user_id)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        throw fetchError;
+      }
+
+      let updatedFollow;
+      if (existingFollow) {
+        // If record exists, add new user_id to the array
+        const currentFollow = existingFollow.follow || [];
+        const isAlreadyFollowed = currentFollow.some(follow => 
+          typeof follow === 'object' ? follow.id === targetUserId : follow === targetUserId
+        );
+        
+        if (!isAlreadyFollowed) {
+          const followObject = {
+            id: targetUserId,
+            user_name: targetUserName,
+            createdAt: new Date().toISOString()
+          };
+          updatedFollow = [...currentFollow, followObject];
+        } else {
+          return { message: 'Artist already followed' };
+        }
+
+        // Update existing record
+        const { data, error } = await this.supabase
+          .from('follows')
+          .update({ follow: updatedFollow })
+          .eq('user_id', user_id)
+          .select();
+
+        if (error) throw error;
+        return data;
+      }
+    } catch (error) {
+      this.logger.error('Error creating follow:', error);
+      throw error;
+    }
+  }
+
+  async unfollowUser(user_id: string, targetUserId: string): Promise<any> {
+    try {
+      // Get the current follows record
+      const { data: existingFollow, error: fetchError } = await this.supabase
+        .from('follows')
+        .select('follow')
+        .eq('user_id', user_id)
+        .single();
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      if (!existingFollow || !existingFollow.follow) {
+        return { message: 'User is not following this user' };
+      }
+
+      // Remove user_id from the array
+      const updatedFollow = existingFollow.follow.filter(follow => {
+        // Handle both old format (string) and new format (object)
+        const followId = typeof follow === 'object' ? follow.id : follow;
+        return followId !== targetUserId;
+      });
+
+      // Update the record in database
+      const { data, error } = await this.supabase
+        .from('follows')
+        .update({ follow: updatedFollow })
+        .eq('user_id', user_id)
+        .select();
+
+      if (error) throw error;
+      return data;
+
+    } catch (error) {
+      this.logger.error('Error unfollowing user:', error);
+      throw error;
+    }
+  }
 }
