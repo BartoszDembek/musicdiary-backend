@@ -112,6 +112,10 @@ export class UserService {
         return false;
       }) || [];
 
+
+      this.logger.debug(`User ${id} follows:`, allFollows);
+      this.logger.debug(`User ${id} followers:`, followersData);
+
       return {
         ...user,
         follows: followsData || [],
