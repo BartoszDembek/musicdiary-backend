@@ -79,7 +79,6 @@ export class UserService {
           review_comments:review_comments(*)
         `)
         .eq('id', id)
-        .single();
 
       if (error) {
         this.logger.error('Error fetching user:', error);
