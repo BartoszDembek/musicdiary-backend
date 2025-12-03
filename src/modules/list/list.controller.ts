@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query } from '@nestjs/common';
 import { ListService } from './list.service';
 
 @Controller('lists')
@@ -23,6 +23,16 @@ export class ListController {
   @Get(':listId')
   getListDetails(@Param('listId') listId: string) {
     return this.listService.getListDetails(listId);
+  }
+
+  @Put(':listId')
+  updateList(@Param('listId') listId: string, @Body() data: any) {
+    return this.listService.updateList(listId, data);
+  }
+
+  @Put(':listId/items/reorder')
+  updateListItemsOrder(@Param('listId') listId: string, @Body('items') items: any[]) {
+    return this.listService.updateListItemsOrder(listId, items);
   }
 
   @Post(':listId/items')

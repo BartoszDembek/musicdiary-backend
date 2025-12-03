@@ -40,7 +40,8 @@ export class ListService {
   async getUserLists(userId: string) {
     const { data, error } = await this.supabase
       .from('lists')
-      .select('*')
+      .select(`*, list_items (*)`)
+      
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
@@ -81,6 +82,41 @@ export class ListService {
       throw error;
     }
     return data;
+  }
+
+  async updateList(listId: string, data: any) {
+    const { data: updatedList, error } = await this.supabase
+      .from('lists')
+      .update(data)
+      .eq('id', listId)
+      .select()
+      .single();
+
+    if (error) {
+      this.logger.error('Error updating list:', error);
+      throw error;
+    }
+    return updatedList;
+  }
+
+  async updateListItemsOrder(listId: string, items: any[]) {
+    const updates = items.map((item, index) => 
+      this.supabase
+        .from('list_items')
+        .update({ position: index })
+        .eq('id', item.id)
+        .eq('list_id', listId)
+    );
+
+    const results = await Promise.all(updates);
+    
+    const error = results.find(r => r.error)?.error;
+    if (error) {
+      this.logger.error('Error updating list items order:', error);
+      throw error;
+    }
+    
+    return { success: true };
   }
 
   async addListItem(listId: string, item: any) {
