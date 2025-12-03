@@ -86,15 +86,21 @@ export class UserService {
       }
 
       if (user && user.length > 0) {
-        const { data: followers, error: followersError } = await this.supabase
+        const { data: allFollows, error: followersError } = await this.supabase
           .from('follows')
-          .select('*')
-          .filter('follow::text', 'ilike', `%${id}%`);
+          .select('*');
 
         if (followersError) {
           this.logger.error('Error fetching followers:', followersError);
           throw followersError;
         }
+
+        const followers = allFollows.filter((record: any) => {
+          return (
+            Array.isArray(record.follow) &&
+            record.follow.some((item: any) => item.id === id)
+          );
+        });
 
         user[0].followers = followers;
       }
