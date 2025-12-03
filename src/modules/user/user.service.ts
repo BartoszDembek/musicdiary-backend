@@ -85,6 +85,20 @@ export class UserService {
         throw error;
       }
 
+      if (user && user.length > 0) {
+        const { data: followers, error: followersError } = await this.supabase
+          .from('follows')
+          .select('*')
+          .contains('follow', [{ id: id }]);
+
+        if (followersError) {
+          this.logger.error('Error fetching followers:', followersError);
+          throw followersError;
+        }
+
+        user[0].followers = followers;
+      }
+
       return user;
     } catch (error) {
       this.logger.error('Error fetching user:', error);
