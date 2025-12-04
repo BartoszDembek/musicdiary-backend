@@ -37,9 +37,11 @@ export class ReviewController {
   @Body("types") types,
   @Body("rating") rating: number,
   @Body("artistName") artistName: string,
-  @Body("itemName") itemName: string) {
+  @Body("itemName") itemName: string,
+  @Body("image") image: string,
+) {
     try {
-        const response = await this.reviewService.postReview(id, spotifyId, text, types, rating, artistName, itemName);
+        const response = await this.reviewService.postReview(id, spotifyId, text, types, rating, artistName, itemName, image);
         return response;
       } catch (error) {
         console.error('Get user error:', error);

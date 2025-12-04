@@ -33,4 +33,18 @@ export class UserController {
       throw error;
     }
   }
+
+  @Get('follower-info/:id')
+  async getFollowerInfo(@Param('id') id: string) {
+    try {
+      const user = await this.userService.getFollowerInfo(id);
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+      return user;
+    } catch (error) {
+      console.error('Get follower info error:', error);
+      throw error;
+    }
+  }
 }

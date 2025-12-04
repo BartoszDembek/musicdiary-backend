@@ -129,6 +129,25 @@ export class UserService {
       throw error;
     }
   }
+
+  async getFollowerInfo(id: string): Promise<any> {
+    try {
+      const { data: user, error } = await this.supabase
+        .from('users')
+        .select('username, avatar')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        this.logger.error('Error fetching follower info:', error);
+        throw error;
+      }
+      return user;
+    } catch (error) {
+      this.logger.error('Error fetching follower info:', error);
+      throw error;
+    }
+  }
 }
 
 
