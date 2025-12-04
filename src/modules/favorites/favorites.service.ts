@@ -19,7 +19,7 @@ export class FavoritesService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  async addFavorite(user_id: string, id: string, artistName: string, albumName: string, type: string): Promise<any> {
+  async addFavorite(user_id: string, id: string, artistName: string, albumName: string, type: string, image: string): Promise<any> {
     try {
       // First, get the current favorites record
       const { data: existingFavorite, error: fetchError } = await this.supabase
@@ -46,6 +46,7 @@ export class FavoritesService {
             artist_name: artistName,
             item_name: albumName,
             type: type,
+            image: image,
             createdAt: new Date().toISOString()
           };
           updatedFavorite = [...currentFavorite, favoriteObject];

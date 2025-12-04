@@ -10,10 +10,10 @@ export class FavoritesController {
   async addFavorite(
     @Param('userId') userId: string, 
     @Query('id') id: string,
-    @Body() body: { artistName: string; albumName: string, type: string }
+    @Body() body: { artistName: string; albumName: string, type: string, image:string }
   ) {
     try {
-        const response = await this.favoritesService.addFavorite(userId, id, body.artistName, body.albumName, body.type);
+        const response = await this.favoritesService.addFavorite(userId, id, body.artistName, body.albumName, body.type, body.image);
         return response;
       } catch (error) {
         console.error('Get user error:', error);
