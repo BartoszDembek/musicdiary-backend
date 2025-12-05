@@ -19,7 +19,8 @@ export class ReviewService {
     this.supabase = createClient(supabaseUrl, supabaseKey);
   }
 
-  async postReview(user_id: string, spotify_id:string, text: string, types: string, rating: number, artist_name: string, item_name: string, image: string): Promise<any> {
+  async postReview(user_id: string, spotify_id:string, 
+    text: string, types: string, rating: number, artist_name: string, item_name: string, image: string): Promise<any> {
     try {
       const { data: review, error } = await this.supabase
         .from('reviews')

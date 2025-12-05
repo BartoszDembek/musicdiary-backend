@@ -32,14 +32,14 @@ export class ReviewController {
 
   @Post(':id')
   async postReview(@Param('id') id: string,
-  @Body("spotifyId") spotifyId ,
-  @Body("text") text: string,
-  @Body("types") types,
-  @Body("rating") rating: number,
-  @Body("artistName") artistName: string,
-  @Body("itemName") itemName: string,
-  @Body("image") image: string,
-) {
+    @Body("spotifyId") spotifyId ,
+    @Body("text") text: string,
+    @Body("types") types,
+    @Body("rating") rating: number,
+    @Body("artistName") artistName: string,
+    @Body("itemName") itemName: string,
+    @Body("image") image: string,
+  ) {
     try {
         const response = await this.reviewService.postReview(id, spotifyId, text, types, rating, artistName, itemName, image);
         return response;

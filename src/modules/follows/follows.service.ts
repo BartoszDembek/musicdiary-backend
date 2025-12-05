@@ -136,7 +136,7 @@ export class FollowsService {
           };
           updatedFollow = [...currentFollow, followObject];
         } else {
-          return { message: 'Artist already followed' };
+          return { message: 'User already followed' };
         }
 
         // Update existing record

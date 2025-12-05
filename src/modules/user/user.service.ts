@@ -68,7 +68,7 @@ export class UserService {
 
   async getUserProfile(id: string): Promise<any> {
     try {
-      // Pobierz profil użytkownika z powiązanymi danymi
+      // Get user profile with related data
       const { data: user, error } = await this.supabase
         .from('users')
         .select(`
@@ -85,6 +85,7 @@ export class UserService {
         throw error;
       }
 
+      // Enrich user data with followers
       if (user && user.length > 0) {
         const { data: allFollows, error: followersError } = await this.supabase
           .from('follows')
