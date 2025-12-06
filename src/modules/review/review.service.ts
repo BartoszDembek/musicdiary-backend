@@ -134,8 +134,8 @@ export class ReviewService {
         throw error;
       }
 
-      const upvotes = data?.up_votes?.length || 0;
-      const downvotes = data?.down_votes?.length || 0;
+      const upvotes = data?.up_votes || [];
+      const downvotes = data?.down_votes || [];
 
       return { upvotes, downvotes };
     } catch (error) {
