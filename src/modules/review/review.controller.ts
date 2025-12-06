@@ -30,6 +30,30 @@ export class ReviewController {
     }
   }
 
+  @Get('score/:reviewId')
+  async getReviewScore(@Param('reviewId') reviewId: string) {
+    try {
+      return await this.reviewService.getReviewScore(reviewId);
+    } catch (error) {
+      console.error('Get review score error:', error);
+      throw error;
+    }
+  }
+
+  @Post('vote')
+  async voteReview(
+    @Body('userId') userId: string,
+    @Body('reviewId') reviewId: string,
+    @Body('type') type: 'up' | 'down',
+  ) {
+    try {
+      return await this.reviewService.voteReview(userId, reviewId, type);
+    } catch (error) {
+      console.error('Vote review error:', error);
+      throw error;
+    }
+  }
+
   @Post(':id')
   async postReview(@Param('id') id: string,
     @Body("spotifyId") spotifyId ,

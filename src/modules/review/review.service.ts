@@ -121,4 +121,82 @@ export class ReviewService {
       throw error;
     }
   }
+
+  async getReviewScore(reviewId: string): Promise<{ upvotes: number; downvotes: number }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('review_score')
+        .select('up_votes, down_votes')
+        .eq('review_id', reviewId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
+
+      const upvotes = data?.up_votes?.length || 0;
+      const downvotes = data?.down_votes?.length || 0;
+
+      return { upvotes, downvotes };
+    } catch (error) {
+      this.logger.error('Error getting review score:', error);
+      throw error;
+    }
+  }
+
+  async voteReview(userId: string, reviewId: string, type: 'up' | 'down'): Promise<any> {
+    try {
+      let { data: score, error } = await this.supabase
+        .from('review_score')
+        .select('*')
+        .eq('review_id', reviewId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
+
+      if (!score) {
+        const { data: newScore, error: createError } = await this.supabase
+          .from('review_score')
+          .insert({ review_id: reviewId, up_votes: [], down_votes: [] })
+          .select()
+          .single();
+        
+        if (createError) throw createError;
+        score = newScore;
+      }
+
+      let upVotes: string[] = score.up_votes || [];
+      let downVotes: string[] = score.down_votes || [];
+
+      if (type === 'up') {
+        if (upVotes.includes(userId)) {
+          upVotes = upVotes.filter(id => id !== userId);
+        } else {
+          upVotes.push(userId);
+          downVotes = downVotes.filter(id => id !== userId);
+        }
+      } else {
+        if (downVotes.includes(userId)) {
+          downVotes = downVotes.filter(id => id !== userId);
+        } else {
+          downVotes.push(userId);
+          upVotes = upVotes.filter(id => id !== userId);
+        }
+      }
+
+      const { error: updateError } = await this.supabase
+        .from('review_score')
+        .update({ up_votes: upVotes, down_votes: downVotes })
+        .eq('id', score.id);
+
+      if (updateError) throw updateError;
+
+      return { upvotes: upVotes.length, downvotes: downVotes.length };
+    } catch (error) {
+      this.logger.error('Error voting review:', error);
+      throw error;
+    }
+  }
 }
