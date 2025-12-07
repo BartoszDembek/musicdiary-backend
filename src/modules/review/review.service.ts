@@ -83,7 +83,11 @@ export class ReviewService {
         .from('reviews')
         .select(`
           *,
-          users:users(*)
+          users:users(*),
+          review_comments:review_comments(
+            *,
+            users:users(*)
+          )
         `)
         .order('created_at', { ascending: false })
         .limit(20);
