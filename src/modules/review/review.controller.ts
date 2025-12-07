@@ -73,6 +73,17 @@ export class ReviewController {
       }
   }
 
+  @Get('featured')
+  async getFeaturedReviews() {
+    try {
+      const response = await this.reviewService.getFeaturedReviews();
+      return response;
+    } catch (error) {
+      console.error('Get featured reviews error:', error);
+      throw error;
+    }
+  }
+
   @Get(':spotifyId')
   async getReviewsBySpotifyId(
     @Param('spotifyId') spotifyId: string,

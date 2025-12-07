@@ -77,6 +77,29 @@ export class ReviewService {
     }
   }
 
+  async getFeaturedReviews(): Promise<any> {
+    try {
+      const { data: reviews, error } = await this.supabase
+        .from('reviews')
+        .select(`
+          *,
+          users:users(*)
+        `)
+        .order('created_at', { ascending: false })
+        .limit(20);
+
+      if (error) {
+        this.logger.error('Error fetching featured reviews:', error);
+        throw error;
+      }
+
+      return reviews;
+    } catch (error) {
+      this.logger.error('Error fetching featured reviews:', error);
+      throw error;
+    }
+  }
+
   async addComment(reviewId: string, userId: string, text: string): Promise<any> {
     try {
       const { data: comment, error } = await this.supabase
